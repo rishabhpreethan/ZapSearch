@@ -1,0 +1,8 @@
+[workspace]
+members = [
+    "core",
+    "indexer",
+    "server",
+    "crawler",
+]
+resolver = "2"

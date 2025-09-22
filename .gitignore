@@ -1,0 +1,60 @@
+/target/
+**/*.rs.bk
+/tmp/
+/.DS_Store
+/index/
+
+# Rust workspace build outputs
+/target/
+/core/target/
+/server/target/
+
+# Indices, datasets, and large runtime artifacts
+/index_*
+/indices/
+/data/
+/datasets/
+/corpus/
+/runs/
+*.log
+crawl_*.log
+/index_top10k/
+
+# Temp and OS junk
+/tmp/
+/.DS_Store
+Thumbs.db
+
+# Environment files (do not commit secrets)
+/.env
+/.env.local
+/web/.env
+/web/.env.local
+
+# Local databases and dumps
+*.sqlite
+*.sqlite3
+*.db
+/backend/sqlite.db
+/db/**
+/server/*.sqlite*
+/core/*.sqlite*
+
+# Next.js / frontend outputs and caches
+/web/node_modules/
+/web/.next/
+/web/out/
+/web/dist/
+/web/build/
+/web/.turbo/
+/web/.cache/
+/web/.vite/
+/web/.parcel-cache/
+/web/.rollup.cache/
+/web/coverage/
+/web/tmp/
+/web/temp/
+/web/*.tsbuildinfo
+/web/.vercel/
+/web/public/uploads/
+/web/public/.cache/

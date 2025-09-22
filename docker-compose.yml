@@ -1,0 +1,22 @@
+version: '3.9'
+services:
+  server:
+    build: .
+    image: search-engine-server:latest
+    environment:
+      - PORT=8080
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./index:/data/index
+    command: ["/usr/local/bin/server", "--index", "/data/index", "--host", "0.0.0.0", "--port", "8080"]
+  web:
+    working_dir: /app
+    image: node:20-alpine
+    environment:
+      - NEXT_PUBLIC_BACKEND_URL=http://localhost:8080
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./web:/app
+    command: sh -c "npm i && npm run dev"

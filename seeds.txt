@@ -1,0 +1,6 @@
+# One URL per line. You should replace these with domains you want to crawl.
+# The crawler will respect robots.txt and skip disallowed paths.
+https://www.rust-lang.org/
+https://doc.rust-lang.org/
+https://www.rfc-editor.org/
+https://www.wikipedia.org/
