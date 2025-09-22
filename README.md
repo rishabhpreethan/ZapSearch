@@ -173,23 +173,6 @@ docker-compose for local dev:
 docker compose up --build
 ```
 
-## Deployment
-
-### Frontend (Vercel)
-1. Push repo to GitHub.
-2. Import in Vercel, set `NEXT_PUBLIC_BACKEND_URL` to your backend public URL.
-3. Deploy.
-
-### Backend (Railway example)
-1. Create a Railway project and add a service via "Deploy from GitHub" or Dockerfile.
-2. Set `PORT` and `ADMIN_TOKEN` environment variables.
-3. Add a persistent volume and mount it at `/data/index`.
-4. Command: `/usr/local/bin/server --index /data/index --host 0.0.0.0 --port $PORT`
-
-Render/Fly.io follow similar steps: deploy Docker image, set env vars, attach a persistent volume for `/data/index`.
-
-If your platform lacks persistent disk on the free tier, bake a small index into the image or re-build index on start from `sample_data/` (slower, not recommended for large corpora).
-
 ## Tests & Benchmarks
 
 - Unit tests: `cargo test` (e.g., tokenizer tests in `core/tests/`)
