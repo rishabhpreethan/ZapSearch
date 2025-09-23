@@ -1,4 +1,6 @@
-# search-engine-rs
+# ZapSearch
+
+![ZapSearch Logo](<zapsearchlogo.png>)
 
 Rust TF-IDF inverted-index search engine with an Axum HTTP server and a Next.js frontend.
 
@@ -9,13 +11,78 @@ This repository is structured as a Cargo workspace:
 - server/ — Axum HTTP server exposing /search and /doc/{id}
 - web/ — Next.js app, can run locally or be deployed to Vercel
 
+
+![Home Page](<home.png>)
+![Results](<search.png>)
+
+## Features
+
+- Lightweight, dependency-minimal TF-IDF inverted index written in Rust
+- Fast HTTP API via Axum with JSON responses and snippet highlighting
+- Deterministic, cacheable on-disk index format (no external DB required)
+- Separate indexer/server processes for clean operational boundaries
+- Next.js frontend with search UI, highlighting, pagination, and deep links
+- Optional polite crawler to bootstrap a dataset (robots-aware)
+
+## Architecture
+
+```
+            +----------------+
+            |   JSON/JSONL   |
+            |   documents    |
+            +--------+-------+
+                     |
+                     |   (indexer)
+                     v
+              +-------------+        serves via HTTP        +-------------+
+              |   Index     |  <--------------------------> |   Server    |
+              |  on disk    |   (Axum: /search, /doc)       |             |
+              +------+------+                               +-------+-----+
+                     ^                                                |
+                     |                                                v
+                     |                                        +--------------+
+                     |                                        |   Next.js    |
+                     |                                        |   Frontend   |
+                     |                                        +--------------+
+```
 ## Quick start
 
-```
-cargo build
+1) Install prerequisites
+
+- Rust toolchain via rustup
+- Node.js 18+ (for the `web/` app)
+
+2) Build the workspace
+
+```bash
+cargo build --workspace
 ```
 
-## Crawl Top-10k (optional)
+3) Prepare or obtain data (see [Build & index](#build--index)) and build an index into `./index`
+
+```bash
+cargo run -p indexer -- build \
+  --input ./sample_data/docs.jsonl \
+  --output ./index
+```
+
+4) Start the backend API
+
+```bash
+cargo run -p server -- --index ./index --host 0.0.0.0 --port 8080
+```
+
+5) Start the Next.js frontend
+
+```bash
+cd web
+npm i
+export NEXT_PUBLIC_BACKEND_URL=http://localhost:8080
+npm run dev
+# Open http://localhost:3000/search
+```
+
+## Crawl Top-10k
 
 Create a seeds file using Tranco (one domain per line):
 ```
@@ -177,10 +244,3 @@ docker compose up --build
 
 - Unit tests: `cargo test` (e.g., tokenizer tests in `core/tests/`)
 - Benchmarks: `cargo bench` (criterion bench for tokenizer)
-
-## Security & Ops Notes
-
-- Protect admin endpoints with `X-ADMIN-TOKEN` header and `ADMIN_TOKEN` env var.
-- Enable CORS appropriately (currently permissive; restrict in production).
-- Health endpoint: `/health`.
-- Target hardware: 100k docs fits in a few hundred MB depending on vocabulary; postings are loaded on demand to reduce RAM.
